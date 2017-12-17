@@ -39,17 +39,18 @@ I chose to use Rails over a Ruby framework more suited to APIs, like Sinatra, pu
 
 A picture of the database schema can be found in db/schema.png.
 
+I considered implementing the user model of care_managers and patients in two different ways.
+
+The way I ended up implementing was a single model for User which contains a field for their role (either care_manager or patient). You could also separate the role field into it's own table (which people oftentimes do in rails), however, many times we need to know user information we also will want to know their role, so in this case it makes sense to keep the role field as part of the User model. Here is a picture of that final schema:
+![alt text](https://github.com/mattbehan/wellframe_messaging_app/blob/master/db/schema_final.png "Users care managers")
+
+
+I was confused a bit by this specification in the challenge: "Each patient is part of exactly one message thread in which many care managers can participate in". I was not sure if care_managers should be assigned to patients, and only care_managers that are assigned to patients through a join table patient_care_managers should be allowed to participate in message_threads with those patients. Then in order to get message_threads that a care_manager is a part of, we can join message_threads and users_care_managers on patient_id. Due to doctor patient confidentiality rules, I figured this should be implemented.
+
 One decision that was made was to add the field role to the user model rather than separate it off into a separate table. Many times that we will be accessing user information in this application, we will also want to know about the role, so it will provide the fastest read access. Also, role information will be centrally managed, and having it as part of the user model makes it easiest.
 
-Since there should be never be more than one message_thread between a patient and a doctor, I enforced uniqueness at both the database and model level. 
+Instead of enforcing uniqueness of a patient only having a single message thread at the database level, I enforced it at the model level. This way, if later a design change is made where patients can have more than one thread (say for different surgeries), it will be easier to enforce that design change. 
 
-The table message_threads is used to identify 
-
-Should I create two separate models for doctors and patients?
-Advantage would be that this clearly dictates the two different roles here, and as the app evolves it could be easier to implement different dashboards and functionality for Doctors and Patients.
-Disadvantages are that it's more difficult to do with devise, I'm not sure if it's what they're looking for (or best practice), and 
-
-Should I add message_thread_id to the messages table? Advantage would be that it allows faster retrieval when searching through messages for messages from a specific thread, as opposed to having to search for through messages where both sender_id and recipient_id are equal to the two things you're looking for. I think I should add message_thread_id, because according to their specs, it's a nested resource
 
 ### Front-end decisions
 
