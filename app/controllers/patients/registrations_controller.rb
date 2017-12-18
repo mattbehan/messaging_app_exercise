@@ -1,6 +1,14 @@
 class Patients::RegistrationsController < Devise::RegistrationsController
-  include Accessible
-  # before_action :configure_sign_up_params, only: [:create]
+before_action :check_patient
+
+
+  def check_patient
+    if !current_patient
+      flash.clear
+      # if you have rails_admin. You can redirect anywhere really
+      redirect_to("/message_threads") && return
+    end
+  end  # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up

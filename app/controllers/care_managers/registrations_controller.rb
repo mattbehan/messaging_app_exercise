@@ -1,5 +1,14 @@
 class CareManagers::RegistrationsController < Devise::RegistrationsController
-  include Accessible
+before_action :check_care_manager
+
+
+  def check_care_manager
+    if !current_care_manager
+      flash.clear
+      # if you have rails_admin. You can redirect anywhere really
+      redirect_to("/message_threads") && return
+    end
+  end
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 

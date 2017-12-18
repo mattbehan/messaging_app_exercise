@@ -1,0 +1,10 @@
+<h2> Message Threads </h2>
+
+<% if current_patient %>
+	<%= link_to "id", message_thread_messages_path(@message_threads.id) %>  <%= @message_threads.id %>, unread_messages: <%= current_user.unread_messages_in_message_thread(@message_threads.id) %>
+<% else %>
+	<% @message_threads.each do |message_thread| %>
+	<p> <%= link_to "id", message_thread_messages_path(message_thread.id) %> 
+	<%= message_thread.id %>, unread_messages: <%= current_user.unread_messages_in_message_thread(message_thread.id) %> <%= button_to("Mark as read", message_thread, method: "patch") %> </p>
+	<% end %>
+<% end %>

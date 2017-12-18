@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171218011741) do
+ActiveRecord::Schema.define(version: 20171218025624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,22 +33,19 @@ ActiveRecord::Schema.define(version: 20171218011741) do
   end
 
   create_table "message_threads", force: :cascade do |t|
-    t.integer "provider_id", null: false
     t.integer "patient_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["patient_id"], name: "index_message_threads_on_patient_id"
-    t.index ["provider_id"], name: "index_message_threads_on_provider_id"
   end
 
   create_table "messages", force: :cascade do |t|
-    t.bigint "message_thread_id", null: false
-    t.integer "author", null: false
+    t.integer "message_thread_id", null: false
+    t.integer "creator_id", null: false
     t.text "message_text", null: false
-    t.boolean "read_by_recipient", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["author"], name: "index_messages_on_author"
+    t.index ["creator_id"], name: "index_messages_on_creator_id"
     t.index ["message_thread_id"], name: "index_messages_on_message_thread_id"
   end
 
@@ -69,9 +66,31 @@ ActiveRecord::Schema.define(version: 20171218011741) do
     t.index ["reset_password_token"], name: "index_patients_on_reset_password_token", unique: true
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "patients_care_managers", force: :cascade do |t|
+    t.integer "patient_id", null: false
+    t.integer "care_manager_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["care_manager_id"], name: "index_patients_care_managers_on_care_manager_id"
+    t.index ["patient_id"], name: "index_patients_care_managers_on_patient_id"
+  end
+
+  create_table "read_messages", force: :cascade do |t|
+    t.integer "message_id", null: false
+    t.integer "user_id", null: false
+    t.boolean "read", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id"], name: "index_read_messages_on_message_id"
+    t.index ["user_id"], name: "index_read_messages_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "identifiable_type"
+    t.bigint "identifiable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["identifiable_type", "identifiable_id"], name: "index_users_on_identifiable_type_and_identifiable_id"
   end
 
 end
