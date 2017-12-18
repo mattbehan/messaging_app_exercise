@@ -1,4 +1,10 @@
 class MessagesController < ApplicationController
+
+	before_action :check_if_user_signed_in, only: [:index, :update]
+	before_action only: [:index, :create] do
+		ensure_current_user_participates_in_thread(params[:message_thread_id])
+	end
+
 	def index
 		@message = Message.new
 		@messages = Message.where(message_thread_id: params[:message_thread_id])

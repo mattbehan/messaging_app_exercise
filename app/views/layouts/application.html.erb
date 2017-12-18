@@ -16,23 +16,19 @@
         <li> <%= link_to "Home", root_path %></li>
 
         <%if current_care_manager %>
-        <ul id="dropdown1" class="dropdown-content">
           <li> <%= link_to "Edit account information", edit_care_manager_registration_path %> </li>
           <li> <%= link_to("Logout", destroy_care_manager_session_path, method: "delete")%></li>
-        </ul>
       <% elsif current_patient%>
-        <ul id="dropdown1" class="dropdown-content">
           <li> <%= link_to "Edit account information", edit_patient_registration_path %> </li>
           <li> <%= link_to("Logout", destroy_patient_session_path, method: "delete")%></li>
-        </ul>
       <% else %>
 
       <li><%= link_to("Patient sign in", new_patient_session_path)%></li>
       <li><%= link_to("Patient sign up", new_patient_registration_path)%></li>
       <li><%= link_to("Care Manager sign in", new_care_manager_session_path)%></li>
       <li><%= link_to("Care Manager sign up", new_care_manager_registration_path)%></li>
-      </li>
       <% end %>
+      <li> <%= link_to 'Back', :back %> </li>
       </ul>
     </div>
   </nav>
